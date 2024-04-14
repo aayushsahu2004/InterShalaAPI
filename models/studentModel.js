@@ -15,14 +15,18 @@ const studentModel = new mongoose.Schema({
         maxLength: [15, "Password should not exceed more than 15 characters"],
         minLength: [8, "Password should have at least 8 characters"],
         // match:[/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/]
+    },
+    restePasswordToken:{
+        type:String,
+        default:"0"
     }
 }, { timestamps: true });
 
 studentModel.pre("save", function () {
-    if (this.isModified("password")) {
-        return;
+    if (!this.isModified("password")) {
+        return;  
     }
-    let salt = bcrypt.genSaltSync(15);
+    let salt = bcrypt.genSaltSync(10);
     this.password = bcrypt.hashSync(this.password, salt);
 });
 

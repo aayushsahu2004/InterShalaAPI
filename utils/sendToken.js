@@ -6,5 +6,6 @@ exports.sendToken = (student, statusCode, res) =>{
         httpOnly: true,
         // secure:true
     };
-    res.status(statusCode).cookie("token", token, options).json({succes: true, id: student._id, token});
+    res.status(statusCode).cookie("token", token, options).json({success: true, id: student._id, token});
+
 };
