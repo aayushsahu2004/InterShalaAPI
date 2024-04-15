@@ -24,12 +24,18 @@ app.use(session({
 }));
 app.use(cookieparser());
 
+// Express file upload
+
+const fileupload = require("express-fileupload");
+app.use(fileupload());
+
 // routes
 app.use("/", require("./routes/indexRoutes"));
 
 // error Handling
 const ErroHandler = require("./utils/ErrorHandler");
 const { genetatedErrors } = require("./middlewares/errors");
+const fileUpload = require("express-fileupload");
 app.all("*", function(req, res ,next){
     next(new ErroHandler(`Requeted URL Not Found ${req.url}`, 404))
 });
