@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { response } = require("express");
 
 const studentModel = new mongoose.Schema({
     firstName: {
@@ -52,6 +53,20 @@ const studentModel = new mongoose.Schema({
             url: "https://images.unsplash.com/photo-1633957897986-70e83293f3ff?q=80&w=1893&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
     },
+    resume: {
+        education: {
+            type: Array,
+            default: []
+        },
+        jobs: [],
+        internship: [],
+        responsebilities: [],
+        courses: [],
+        projects: [],
+        skills: [],
+        accomplishments: [],
+
+    }
 }, { timestamps: true });
 
 studentModel.pre("save", function () {
