@@ -25,8 +25,8 @@ router.post("/student/send-mail", studentsendmail)
 // GET /student/forget-password-link/:studentId
 router.get("/student/forget-password-link/:id", studentforgetlink);
 
-// POST /student/reset-password-link/:studentId
-router.post("/student/reset-password/:id", isAuthenticated, studentresetpassword);
+// POST /student/reset-password-link
+router.post("/student/reset-password", isAuthenticated, studentresetpassword);
 
 // POST /student/update
 router.post("/student/update", isAuthenticated, studentupdate);

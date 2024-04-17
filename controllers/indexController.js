@@ -47,7 +47,7 @@ exports.studentsendmail = catchAsyncError(async function (req, res, next) {
         return next(new ErroHandler("Student not found with this email address", 404));
     };
 
-    const url = `${req.protocol}://${req.get("host")}/student/forget-password-link/${student._id}`
+    const url = `${req.protocol}://${req.get("host")}/student/student/forget-password-link/${student._id}`
 
     sendmail(req, res, next, url);
     student.restePasswordToken = "1";
@@ -94,7 +94,7 @@ exports.studentupdate = catchAsyncError(async function (req, res, next) {
 exports.studentuploadavtar = catchAsyncError(async function (req, res, next) {
     const student = await studentModel.findById(req.id).exec();
     const file = req.files.avatar;
-    const modifiedFileName = `resumebuilder_${Date.now()}${path.extname(file.name)}`;
+    const modifiedFileName = uuid4() + Date.now() + path.extname(file.name);
 
     if(student.avatar.fileId !== ""){
         await imagekit.deleteFile(student.avatar.fileId);
