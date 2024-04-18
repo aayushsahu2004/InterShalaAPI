@@ -1,9 +1,12 @@
 const path = require("path");
 const { catchAsyncError } = require("../middlewares/catchAsyncErrors");
 const studentModel = require("../models/studentModel");
+const internshipModel = require("../models/internshipModel");
+const jobModel = require("../models/jobModel");
 const ErroHandler = require("../utils/ErrorHandler");
 const { sendmail } = require("../utils/nodemailer");
 const { sendToken } = require("../utils/sendToken");
+const { log } = require("console");
 const imagekit = require("../utils/imageKit").initImageKit();
 
 
@@ -11,7 +14,7 @@ exports.homepage = catchAsyncError(async function (req, res, next) {
     res.json({ message: "Secure HomePage" });
 });
 
-exports.currentuser = catchAsyncError(async function (req, res, next) {
+exports.currentstudent = catchAsyncError(async function (req, res, next) {
     const student = await studentModel.findById(req.id).exec();
     res.json({ student });
 });
@@ -38,7 +41,6 @@ exports.studentsignout = catchAsyncError(async function (req, res, next) {
     res.clearCookie("token");
     res.json({ message: "Successfully Sign-Out" })
 });
-
 
 exports.studentsendmail = catchAsyncError(async function (req, res, next) {
     const student = await studentModel.findOne({ email: req.body.email }).exec();
@@ -82,7 +84,6 @@ exports.studentresetpassword = catchAsyncError(async function (req, res, next) {
     sendToken(student, 201, res);
 });
 
-
 exports.studentupdate = catchAsyncError(async function (req, res, next) {
     const student = await studentModel.findByIdAndUpdate(req.id, req.body).exec();
     res.status(200).json({
@@ -96,7 +97,7 @@ exports.studentuploadavtar = catchAsyncError(async function (req, res, next) {
     const file = req.files.avatar;
     const modifiedFileName = uuid4() + Date.now() + path.extname(file.name);
 
-    if(student.avatar.fileId !== ""){
+    if (student.avatar.fileId !== "") {
         await imagekit.deleteFile(student.avatar.fileId);
     };
 
@@ -104,11 +105,60 @@ exports.studentuploadavtar = catchAsyncError(async function (req, res, next) {
         file: file.data,
         fileName: modifiedFileName
     });
-    
+
     student.avatar = { fileId, url };
     await student.save();
     res.status(200).json({
         success: true,
         message: "Profile Updated Successfully",
     })
+});
+
+
+// --------------- Apply Intership ---------------
+
+exports.applyinternship = catchAsyncError(async function (req, res, next) {
+    const student = await studentModel.findById(req.id).exec();
+    const internship = await internshipModel.findById(req.params.internshipid).exec();
+    if (!internship) {
+        return next(new ErroHandler("Internship Not Found!", 404));
+    }
+    if (internship.students.indexOf(student._id) === -1) {
+        student.appliedinternships.push(internship._id);
+        internship.students.push(student._id);
+        await student.save();
+        await internship.save();
+        res.status(201).json({
+            success: true,
+            internship
+        });
+    } else {
+        return next(new ErroHandler("You are already apllied for this Internship", 500));
+    }
+
+});
+
+
+
+// --------------- Apply Job ---------------
+
+exports.applyjob = catchAsyncError(async function (req, res, next) {
+    const student = await studentModel.findById(req.id).exec();
+    const job = await jobModel.findById(req.params.jobid).exec();
+    if (!job) {
+        return next(new ErroHandler("Job Not Found!", 404));
+    }
+    if (job.students.indexOf(student._id) === -1) {
+        student.appliedjobs.push(job._id);
+        job.students.push(student._id);
+        await student.save();
+        await job.save();
+        res.status(201).json({
+            success: true,
+            job
+        });
+    } else {
+        return next(new ErroHandler("You are already apllied for this Job", 500));
+    }
+
 });
