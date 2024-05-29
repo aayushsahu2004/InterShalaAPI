@@ -27,7 +27,7 @@ exports.editEducation = catchAsyncError(async function (req, res, next) {
     }
     student.resume.education[eduIndex] = { ...student.resume.education[eduIndex], ...req.body };
     await student.save();
-    res.json({ message: "Education Updated!" });
+    res.json({ message: "Education Updated!", eduIndex});
 });
 
 exports.deleteEducation = catchAsyncError(async function (req, res, next) {

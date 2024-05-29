@@ -17,7 +17,7 @@ router.post("/employee/signup", employeesignup);
 router.post("/employee/signin", employeesignin);
 
 // GET /employee/signout
-router.get("/employee/signout", isAuthenticated, employeesignout)
+router.get("/employee/signout", isAuthenticated, employeesignout);
 
 // POST /employee/send-mail
 router.post("/employee/send-mail", employeesendmail)

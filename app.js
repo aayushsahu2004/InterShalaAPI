@@ -1,6 +1,7 @@
 require("dotenv").config({ path: "./.env" });
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 
 //db connection 
@@ -9,6 +10,15 @@ require("./models/database").connectDatabase();
 // Logger
 const logger = require("morgan");
 app.use(logger("tiny"));
+
+// CORS configuration
+
+const corsOption = {
+    origin:' http://localhost:5173',
+    credentials:true
+}
+
+app.use(cors(corsOption));
 
 // body parser
 app.use(express.json());

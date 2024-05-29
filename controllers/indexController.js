@@ -8,6 +8,7 @@ const { sendmail } = require("../utils/nodemailer");
 const { sendToken } = require("../utils/sendToken");
 const { log } = require("console");
 const imagekit = require("../utils/imageKit").initImageKit();
+const { v4: uuidv4 } = require('uuid');
 
 
 exports.homepage = catchAsyncError(async function (req, res, next) {
@@ -95,7 +96,7 @@ exports.studentupdate = catchAsyncError(async function (req, res, next) {
 exports.studentuploadavtar = catchAsyncError(async function (req, res, next) {
     const student = await studentModel.findById(req.id).exec();
     const file = req.files.avatar;
-    const modifiedFileName = uuid4() + Date.now() + path.extname(file.name);
+    const modifiedFileName = uuidv4() + Date.now() + path.extname(file.name);
 
     if (student.avatar.fileId !== "") {
         await imagekit.deleteFile(student.avatar.fileId);

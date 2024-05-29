@@ -41,7 +41,6 @@ exports.employeesignout = catchAsyncError(async function (req, res, next) {
     res.json({ message: "Successfully Sign-Out" })
 });
 
-
 exports.employeesendmail = catchAsyncError(async function (req, res, next) {
     const employee = await employeeModel.findOne({ email: req.body.email }).exec();
 
@@ -83,7 +82,6 @@ exports.employeeresetpassword = catchAsyncError(async function (req, res, next) 
     await employee.save();
     sendToken(employee, 201, res);
 });
-
 
 exports.employeeupdate = catchAsyncError(async function (req, res, next) {
     const employee = await employeeModel.findByIdAndUpdate(req.id, req.body).exec();
