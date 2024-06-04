@@ -35,7 +35,6 @@ app.use(session({
 app.use(cookieparser());
 
 // Express file upload
-
 const fileupload = require("express-fileupload");
 app.use(fileupload());
 
@@ -45,12 +44,15 @@ app.use("/resume/", require("./routes/resumeRoutes"));
 app.use("/employee/", require("./routes/employeeRoutes"));
 
 // error Handling
-const ErroHandler = require("./utils/ErrorHandler");
+const ErrorHandler = require("./utils/ErrorHandler");
 const { genetatedErrors } = require("./middlewares/errors");
-const fileUpload = require("express-fileupload");
-app.all("*", function (req, res, next) {
-    next(new ErroHandler(`Requeted URL Not Found ${req.url}`, 404))
-});
 app.use(genetatedErrors);
+
+
+// Route not found 
+app.all("*", function (req, res, next) {
+    next(new ErrorHandler(`Requeted URL Not Found ${req.url}`, 404))
+});
+
 
 app.listen(process.env.PORT, console.log(`Server running on port ${process.env.PORT}`));
